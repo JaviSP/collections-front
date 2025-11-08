@@ -1,0 +1,35 @@
+<div class="collections-container">
+  <div class="header">
+    <h1>My Collections</h1>
+    <button class="btn btn-primary" (click)="navigateToCreate()">
+      + Create New Collection
+    </button>
+  </div>
+
+  @if (collections().length === 0) {
+    <div class="empty-state">
+      <p>You don't have any collections yet.</p>
+      <p>Create your first collection to start organizing your items!</p>
+    </div>
+  } @else {
+    <div class="collections-grid">
+      @for (collection of collections(); track collection.id) {
+        <div class="collection-card">
+          <div class="collection-header">
+            <h2>{{ collection.name }}</h2>
+            <button class="btn btn-danger btn-sm" (click)="deleteCollection(collection.id)">
+              Delete
+            </button>
+          </div>
+          <p class="collection-description">{{ collection.description }}</p>
+          <div class="collection-meta">
+            <span>{{ collection.fieldDefinitions.length }} fields defined</span>
+          </div>
+          <a [routerLink]="['/collections', collection.id]" class="btn btn-secondary">
+            View Items
+          </a>
+        </div>
+      }
+    </div>
+  }
+</div>

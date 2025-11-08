@@ -1,0 +1,103 @@
+<div class="create-container">
+  <h1>Create New Collection</h1>
+  
+  <div class="form-section">
+    <h2>Collection Details</h2>
+    
+    <div class="form-group">
+      <label for="collectionName">Name *</label>
+      <input 
+        id="collectionName"
+        type="text" 
+        [(ngModel)]="collectionName"
+        placeholder="e.g., My Stamp Collection"
+        class="form-control"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="collectionDescription">Description</label>
+      <textarea 
+        id="collectionDescription"
+        [(ngModel)]="collectionDescription"
+        placeholder="Describe your collection..."
+        class="form-control"
+        rows="3"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>Field Definitions</h2>
+    <p class="help-text">Define what information you want to track for each item in this collection</p>
+    
+    <div class="field-form">
+      <div class="form-group">
+        <label for="fieldName">Field Name</label>
+        <input 
+          id="fieldName"
+          type="text" 
+          [(ngModel)]="newFieldName"
+          placeholder="e.g., Title, Year, Price"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="fieldType">Field Type</label>
+        <select 
+          id="fieldType"
+          [(ngModel)]="newFieldType"
+          class="form-control"
+        >
+          @for (type of fieldTypes; track type) {
+            <option [value]="type">{{ type }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label>
+          <input 
+            type="checkbox" 
+            [(ngModel)]="newFieldRequired"
+          />
+          Required
+        </label>
+      </div>
+
+      <button class="btn btn-secondary" (click)="addField()">
+        Add Field
+      </button>
+    </div>
+
+    @if (fieldDefinitions().length > 0) {
+      <div class="fields-list">
+        <h3>Defined Fields</h3>
+        @for (field of fieldDefinitions(); track field.id) {
+          <div class="field-item">
+            <div class="field-info">
+              <strong>{{ field.name }}</strong>
+              <span class="field-type">{{ field.type }}</span>
+              @if (field.required) {
+                <span class="field-required">Required</span>
+              }
+            </div>
+            <button class="btn btn-danger btn-sm" (click)="removeField(field.id)">
+              Remove
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-secondary" (click)="cancel()">
+      Cancel
+    </button>
+    <button class="btn btn-primary" (click)="createCollection()">
+      Create Collection
+    </button>
+  </div>
+</div>
