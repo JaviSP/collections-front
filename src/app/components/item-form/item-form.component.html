@@ -1,0 +1,60 @@
+<div class="form-container">
+  @if (collection(); as coll) {
+    <h1>{{ isEditMode() ? 'Edit Item' : 'Add New Item' }}</h1>
+    <h2 class="collection-name">{{ coll.name }}</h2>
+
+    <form class="item-form">
+      @for (field of coll.fieldDefinitions; track field.id) {
+        <div class="form-group">
+          <label [for]="field.id">
+            {{ field.name }}
+            @if (field.required) {
+              <span class="required">*</span>
+            }
+          </label>
+          
+          @if (field.type === 'textarea') {
+            <textarea
+              [id]="field.id"
+              [(ngModel)]="fieldValues[field.id]"
+              [name]="field.id"
+              [required]="field.required"
+              class="form-control"
+              rows="4"
+              [placeholder]="'Enter ' + field.name"
+            ></textarea>
+          } @else {
+            <input
+              [id]="field.id"
+              [type]="getInputType(field.type)"
+              [(ngModel)]="fieldValues[field.id]"
+              [name]="field.id"
+              [required]="field.required"
+              class="form-control"
+              [placeholder]="'Enter ' + field.name"
+            />
+          }
+          
+          @if (field.type === 'image' && fieldValues[field.id]) {
+            <div class="image-preview">
+              <img [src]="fieldValues[field.id]" [alt]="field.name" />
+            </div>
+          }
+
+          <small class="field-hint">Type: {{ field.type }}</small>
+        </div>
+      }
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="saveItem()">
+          {{ isEditMode() ? 'Update Item' : 'Create Item' }}
+        </button>
+      </div>
+    </form>
+  } @else {
+    <div class="loading">Loading...</div>
+  }
+</div>

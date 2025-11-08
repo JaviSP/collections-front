@@ -1,0 +1,75 @@
+<div class="detail-container">
+  @if (collection(); as coll) {
+    <div class="header">
+      <div>
+        <button class="btn btn-link" (click)="backToCollections()">
+          ← Back to Collections
+        </button>
+        <h1>{{ coll.name }}</h1>
+        <p class="description">{{ coll.description }}</p>
+      </div>
+      <button class="btn btn-primary" (click)="navigateToAddItem()">
+        + Add Item
+      </button>
+    </div>
+
+    @if (items().length === 0) {
+      <div class="empty-state">
+        <p>No items in this collection yet.</p>
+        <p>Add your first item to get started!</p>
+      </div>
+    } @else {
+      <div class="items-container">
+        @for (item of items(); track item.id) {
+          <div class="item-card">
+            <div class="item-actions">
+              <button class="btn btn-sm btn-secondary" (click)="navigateToEditItem(item.id)">
+                Edit
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="deleteItem(item.id)">
+                Delete
+              </button>
+            </div>
+            
+            <div class="item-fields">
+              @for (field of coll.fieldDefinitions; track field.id) {
+                <div class="field-row">
+                  <strong class="field-label">{{ field.name }}:</strong>
+                  @if (field.type === 'image' && getFieldValue(item, field.id) !== 'N/A') {
+                    <img 
+                      [src]="getFieldValue(item, field.id)" 
+                      [alt]="field.name"
+                      class="field-image"
+                    />
+                  } @else if (field.type === 'url' && getFieldValue(item, field.id) !== 'N/A') {
+                    <a 
+                      [href]="getFieldValue(item, field.id)" 
+                      target="_blank"
+                      class="field-link"
+                    >
+                      {{ getFieldValue(item, field.id) }}
+                    </a>
+                  } @else if (field.type === 'textarea') {
+                    <div class="field-value textarea-value">
+                      {{ formatValue(getFieldValue(item, field.id), field.type) }}
+                    </div>
+                  } @else {
+                    <span class="field-value">
+                      {{ formatValue(getFieldValue(item, field.id), field.type) }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+            
+            <div class="item-meta">
+              <small>Created: {{ item.createdAt | date:'short' }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  } @else {
+    <div class="loading">Loading collection...</div>
+  }
+</div>
